@@ -17,3 +17,4 @@ These are library and Arduino code used in development model:
 7. "max6675.h" Arduino library for header max6675 module.
 8. "mingw.mlpkginstall" MATLAB library for compile s-function builder for Arduino code C++.
 9. "tempDAQ.slx" motor controller and temperature daq model in Simulink for MATLAB R2022b version.
+10. "https://www.youtube.com/watch?v=vFup14vi6H4&ab_channel=NathanielTyler" example of integrate max6657 with Ardunio in SImulink
