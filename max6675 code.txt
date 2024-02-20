@@ -1,0 +1,133 @@
+/* Includes_BEGIN */
+#include <math.h>
+#ifndef MATLAB_MEX_FILE    
+#define ARDUINO 100
+#include "Arduino.h"    // Library Header File to run code on Arduino
+#include "max6675.h"    // Library Header File to run code for MAX6675 Type K Thermocouple
+#include "max6675.cpp"  // Equations for MAX6675 Type K Thermocouple
+    
+// DO & CLK PINS for Arduino UNO are 12 & 13 (see pin-out-map for other PLC models)
+int thermoDO1 = 35;      // Pin 35
+int thermoCLK1 = 31;     // Pin 31
+
+int thermoDO2 = 45;      // Pin 45
+int thermoCLK2 = 41;     // Pin 41
+
+int thermoDO3 = 47;      // Pin 47
+int thermoCLK3 = 51;     // Pin 51
+
+//Thermocouple 1        // Setup Thermocouple 
+int thermoCS1 = 29;     // Pin 29
+MAX6675 thermocouple1(thermoCLK1, thermoCS1, thermoDO1);  // Equation called from max6675.h
+
+//Thermocouple 2        // Setup Thermocouple 
+int thermoCS2 = 33;      // Pin 33
+MAX6675 thermocouple2(thermoCLK1, thermoCS2, thermoDO1);  // Equation called from max6675.h
+
+//Thermocouple 3        // Setup Thermocouple 
+int thermoCS3 = 39;     // Pin 39
+MAX6675 thermocouple3(thermoCLK2, thermoCS3, thermoDO2);  // Equation called from max6675.h
+
+//Thermocouple 4        // Setup Thermocouple 
+int thermoCS4 = 43;      // Pin 43
+MAX6675 thermocouple4(thermoCLK2, thermoCS4, thermoDO2);  // Equation called from max6675.h
+
+//Thermocouple 5        // Setup Thermocouple 
+int thermoCS5 = 49;     // Pin 49
+MAX6675 thermocouple5(thermoCLK3, thermoCS5, thermoDO3);  // Equation called from max6675.h
+#endif
+
+/* Includes_END */
+
+/* Externs_BEGIN */
+/* extern double func(double a); */
+/* Externs_END */
+
+void max6675_probe_Start_wrapper(real_T *xD)
+{
+/* Start_BEGIN */
+/*
+ * Custom Start code goes here.
+ */
+/* Start_END */
+}
+
+void max6675_probe_Outputs_wrapper(real_T *T1,
+                                   real_T *T2,
+                                   real_T *T3,
+                                   real_T *T4,
+                                   real_T *T5,
+                                   const real_T *xD)
+{
+/* Output_BEGIN */
+if(xD[0] == 1)  // void loop() 
+{
+    #ifndef MATLAB_MEX_FILE
+        // basic readout test, just print the current temp
+        
+        //Thermocouple 1    Readout
+        T1[0]=thermocouple1.readCelsius();
+        
+        //Thermocouple 2    Readout
+        T2[0]=thermocouple2.readCelsius();
+        
+         //Thermocouple 3    Readout
+        T3[0]=thermocouple3.readCelsius();
+        
+        //Thermocouple 4    Readout
+        T4[0]=thermocouple4.readCelsius();
+        
+        //Thermocouple 5    Readout
+        T5[0]=thermocouple5.readCelsius();
+        
+        
+    #endif     
+}
+/* Output_END */
+}
+
+void max6675_probe_Update_wrapper(real_T *T1,
+                                  real_T *T2,
+                                  real_T *T3,
+                                  real_T *T4,
+                                  real_T *T5,
+                                  real_T *xD)
+{
+/* Update_BEGIN */
+if(xD[0] != 1) // void setup()
+{
+    #ifndef MATLAB_MEX_FILE
+        // use Arduino pins 
+
+        //Thermocouple 1 (Pull Voltage up to 5 Volts)
+        pinMode(thermoCS1,OUTPUT);digitalWrite(thermoCS1,HIGH);
+
+        //Thermocouple 2 (Pull Voltage up to 5 Volts)
+        pinMode(thermoCS2,OUTPUT);digitalWrite(thermoCS2,HIGH);
+
+        //Thermocouple 3 (Pull Voltage up to 5 Volts)
+        pinMode(thermoCS3,OUTPUT);digitalWrite(thermoCS3,HIGH);
+
+        //Thermocouple 4 (Pull Voltage up to 5 Volts)
+        pinMode(thermoCS4,OUTPUT);digitalWrite(thermoCS4,HIGH);
+        
+        //Thermocouple 5 (Pull Voltage up to 5 Volts)
+        pinMode(thermoCS5,OUTPUT);digitalWrite(thermoCS5,HIGH);
+
+        
+    #endif
+    
+    //done with initialization
+    xD[0] = 1; 
+}
+/* Update_END */
+}
+
+void max6675_probe_Terminate_wrapper(real_T *xD)
+{
+/* Terminate_BEGIN */
+/*
+ * Custom Terminate code goes here.
+ */
+/* Terminate_END */
+}

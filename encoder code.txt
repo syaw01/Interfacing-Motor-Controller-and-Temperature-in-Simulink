@@ -1,0 +1,81 @@
+/* Includes_BEGIN */
+#include <math.h>
+#ifndef MATLAB_MEX_FILE    
+#define ARDUINO 100
+#include "Arduino.h"    // Library Header File to run code on Arduino
+int ENCODER_PIN_A = 2;  // Encoder pin A connected to digital pin 2
+void isr();
+void PWM();
+volatile long pulseCount = 0;  // Count of pulses from the encoder
+float rpm = 0;                 // Calculated RPM
+unsigned long lasttime = 0;    // Time of last sample
+int RPM;
+
+void isr() {
+pulseCount++;
+}
+
+void PWM() {
+if (millis() - lasttime >= 250) {
+  noInterrupts();
+  rpm = ((float)pulseCount / 500) * (60000 / (millis() - lasttime));
+  pulseCount = 0;
+  lasttime = millis();
+  interrupts();
+  rpm;
+  }
+}
+#endif
+/* Includes_END */
+
+/* Externs_BEGIN */
+/* extern double func(double a); */
+/* Externs_END */
+
+void encoder_Start_wrapper(real_T *xD)
+{
+/* Start_BEGIN */
+/*
+ * Custom Start code goes here.
+ */
+/* Start_END */
+}
+
+void encoder_Outputs_wrapper(real_T *RPM,
+                             const real_T *xD)
+{
+/* Output_BEGIN */
+if(xD[0] == 1)  // void loop() 
+{
+    #ifndef MATLAB_MEX_FILE
+  PWM();
+  RPM[0] = rpm;     
+    #endif     
+}
+/* Output_END */
+}
+
+void encoder_Update_wrapper(real_T *RPM,
+                            real_T *xD)
+{
+/* Update_BEGIN */
+if(xD[0] != 1) // void setup()
+{
+  #ifndef MATLAB_MEX_FILE
+  pinMode(ENCODER_PIN_A, INPUT);
+  attachInterrupt(digitalPinToInterrupt(ENCODER_PIN_A), isr, RISING);     
+  #endif
+  //done with initialization
+    xD[0] = 1; 
+}
+/* Update_END */
+}
+
+void encoder_Terminate_wrapper(real_T *xD)
+{
+/* Terminate_BEGIN */
+/*
+ * Custom Terminate code goes here.
+ */
+/* Terminate_END */
+}
